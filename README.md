@@ -1,56 +1,25 @@
-# Windows Systems Programming Library
+# Random Number Generator Module
 
-A comprehensive C# interop library providing low-level access to Windows APIs, graphics programming, and system internals.
+This directory contains a low-level random number generator implementation using the Intel RDRAND instruction.
 
-## Overview
+## Contents
 
-This project is a collection of C# wrappers and utilities for:
-- **Windows API functions** (Kernel32, Ntdll, User32)
-- **Vulkan graphics programming**
-- **PE (Portable Executable) file parsing**
-- **Low-level memory management**
-- **Process Environment Block (PEB) manipulation**
+- `_.cs` - Random number generator with hardware-accelerated cryptographic randomness
 
-## Main Components
+## Implementation Details
 
-### Memory Management
-- **Mallocator** - Custom memory allocator using VirtualAlloc/VirtualFree
-- **Kernel32/VirtualAlloc** - Windows memory allocation APIs with allocation types, protection constants, and page granularity
+The module provides a `RandResult` structure and `Rand()` method that:
 
-### Windows NT APIs
-- **Ntdll** - Native NT API wrappers including:
-  - `NtCreateSectionEx` - Section object creation with access rights and allocation attributes
-  - `NtMapViewOfSection` - Memory mapping with inheritance and protection options
-  - `NtOpenFile` - File access with sharing and open options
-  - `NtQueueApcThreadEx2` - Asynchronous procedure call queuing
-  - `ObjectAttributes` - NT object attribute structures
-  - `UnicodeString` - NT Unicode string handling
+- Uses Intel's RDRAND instruction for hardware-based random number generation
+- Allocates executable memory and injects x64 assembly code at runtime
+- Leverages Windows NT APIs (`NtQueueApcThreadEx2`) for asynchronous execution
+- Supports both bit-count and byte-count based random data generation
 
-### Graphics Programming
-- **Vulkan** - Complete Vulkan API bindings for 3D graphics programming
-- **User32** - Windows GUI APIs
+### Key Features
 
-### File Format Analysis
-- **PE** - Portable Executable file format parser for analyzing Windows executables and DLLs
+- **Hardware randomness** via RDRAND instruction
+- **Dynamic code generation** with executable memory allocation
+- **Asynchronous execution** using APC (Asynchronous Procedure Call) queuing
+- **Memory management** with VirtualAlloc/VirtualFree
 
-### Process Internals
-- **PEB (Process Environment Block)** - Access to process internals including:
-  - Loader data structures
-  - Module information
-  - Process parameters
-
-### Build System
-- Custom C# compiler wrapper with configuration support for building and testing individual components
-
-## Architecture
-
-The library uses unsafe C# code with extensive P/Invoke declarations to provide direct access to Windows system calls and low-level APIs. Each component is organized into focused modules with appropriate enumerations, structures, and wrapper methods.
-
-## Use Cases
-
-This library is designed for:
-- Systems programming and low-level Windows development
-- Reverse engineering and malware analysis
-- Graphics programming with Vulkan
-- Memory management and process manipulation
-- PE file analysis and inspection
+The implementation demonstrates advanced techniques including runtime assembly injection, unsafe memory operations, and low-level Windows API integration.
