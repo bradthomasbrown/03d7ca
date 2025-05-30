@@ -1,25 +1,72 @@
-# Random Number Generator Module
+# Project 03d7ca
 
-This directory contains a low-level random number generator implementation using the Intel RDRAND instruction.
+A C# cryptographic random number generation library that uses hardware-based random number generation (RDRAND instruction) through low-level assembly code execution.
 
-## Contents
+## Overview
 
-- `_.cs` - Random number generator with hardware-accelerated cryptographic randomness
+This project implements a cryptographic random number generator that:
+- Uses the x86-64 RDRAND instruction for hardware-based entropy
+- Executes assembly code through dynamically allocated executable memory
+- Provides a transaction-based interface for random byte generation
+- Includes request/response structures for managing random data operations
 
-## Implementation Details
+## Architecture
 
-The module provides a `RandResult` structure and `Rand()` method that:
+### Core Components
 
-- Uses Intel's RDRAND instruction for hardware-based random number generation
-- Allocates executable memory and injects x64 assembly code at runtime
-- Leverages Windows NT APIs (`NtQueueApcThreadEx2`) for asynchronous execution
-- Supports both bit-count and byte-count based random data generation
+- **C/methods/C/**: Main implementation containing assembly code for RDRAND-based random generation
+- **Request/**: Data structures for random number generation requests
+- **Response/**: Data structures for operation completion status  
+- **Transaction/**: Container structures linking requests and responses
+- **tests/**: Test implementations demonstrating usage
 
-### Key Features
+### Key Files
 
-- **Hardware randomness** via RDRAND instruction
-- **Dynamic code generation** with executable memory allocation
-- **Asynchronous execution** using APC (Asynchronous Procedure Call) queuing
-- **Memory management** with VirtualAlloc/VirtualFree
+- `C/methods/C/_.cs`: Core random generation logic with inline x86-64 assembly
+- `Request/S/_.cs`: Request structure defining byte count and buffer pointer
+- `Response/S/_.cs`: Response structure with completion status and remaining bytes
+- `Transaction/S/_.cs`: Transaction structure linking request and response pointers
+- `tests/C/methods/e9b6ec/_.cs`: Test demonstrating the random generation workflow
 
-The implementation demonstrates advanced techniques including runtime assembly injection, unsafe memory operations, and low-level Windows API integration.
+## How It Works
+
+1. **Memory Allocation**: Uses `Mallocator.C` to allocate executable memory pages
+2. **Assembly Injection**: Injects x86-64 assembly code that uses RDRAND instruction
+3. **Transaction Processing**: Processes requests through a transaction structure
+4. **Random Generation**: Generates random bytes using hardware entropy source
+5. **Status Reporting**: Returns completion status and bytes remaining
+
+## Usage Example
+
+```csharp
+// Allocate request, response, and transaction structures
+ulong _req = m.Alloc(Req.C.Size);
+ulong _res = m.Alloc(Res.C.Size);
+ulong _tx = m.Alloc(Tx.C.Size);
+
+// Configure request for 16 random bytes
+*(ushort*)(_req+0) = 16;
+*(ulong *)(_req+2) = m.Alloc(16);
+
+// Link request and response in transaction
+*(ulong*)(_tx+0) = _req;
+*(ulong*)(_tx+8) = _res;
+
+// Execute random generation
+_03d7ca_.C._e9b6ec_(_tx);
+
+// Check results
+_03d7ca_.Response.S res = *(Res.S*)_res;
+Console.WriteLine("Completed: {0}", res.Completed);
+```
+
+## Security Notes
+
+This implementation uses low-level memory management and assembly code execution. It should only be used in trusted environments where code injection protections are appropriate for the use case.
+
+## Dependencies
+
+- Kernel32 API for memory management
+- Ntdll for thread APC queuing
+- Mallocator utility for memory allocation
+- Hardware support for RDRAND instruction

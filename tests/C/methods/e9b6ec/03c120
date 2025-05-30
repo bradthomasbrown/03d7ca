@@ -1,0 +1,8 @@
+Mallocator\*.cs
+Kernel32\*.cs
+03d7ca\C\*.cs
+03d7ca\Request\*.cs
+03d7ca\Response\*.cs
+03d7ca\Transaction\*.cs
+Algorithms\*.cs
+Ntdll\*.cs
