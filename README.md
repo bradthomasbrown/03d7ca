@@ -1,12 +1,12 @@
 # Project 03d7ca
 
-A C# cryptographic random number generation library that uses hardware-based random number generation (RDRAND instruction) through low-level assembly code execution.
+A C# cryptographic random number generation library that uses hardware-based random number generation (RDRAND instruction) through low-level x86_64 execution.
 
 ## Overview
 
 This project implements a cryptographic random number generator that:
-- Uses the x86-64 RDRAND instruction for hardware-based entropy
-- Executes assembly code through dynamically allocated executable memory
+- Uses the x86_64 RDRAND instruction for hardware-based entropy
+- Executes x86_64 code through dynamically allocated executable memory
 - Provides a transaction-based interface for random byte generation
 - Includes request/response structures for managing random data operations
 
@@ -14,7 +14,7 @@ This project implements a cryptographic random number generator that:
 
 ### Core Components
 
-- **C/methods/C/**: Main implementation containing assembly code for RDRAND-based random generation
+- **C/methods/C/**: Main implementation containing x86_64 code for RDRAND-based random generation
 - **Request/**: Data structures for random number generation requests
 - **Response/**: Data structures for operation completion status  
 - **Transaction/**: Container structures linking requests and responses
@@ -22,7 +22,7 @@ This project implements a cryptographic random number generator that:
 
 ### Key Files
 
-- `C/methods/C/_.cs`: Core random generation logic with inline x86-64 assembly
+- `C/methods/C/_.cs`: Core random generation logic with inline x86-64
 - `Request/S/_.cs`: Request structure defining byte count and buffer pointer
 - `Response/S/_.cs`: Response structure with completion status and remaining bytes
 - `Transaction/S/_.cs`: Transaction structure linking request and response pointers
@@ -31,7 +31,7 @@ This project implements a cryptographic random number generator that:
 ## How It Works
 
 1. **Memory Allocation**: Uses `Mallocator.C` to allocate executable memory pages
-2. **Assembly Injection**: Injects x86-64 assembly code that uses RDRAND instruction
+2. **x86_64 Injection**: Injects x86-64 that uses RDRAND instruction
 3. **Transaction Processing**: Processes requests through a transaction structure
 4. **Random Generation**: Generates random bytes using hardware entropy source
 5. **Status Reporting**: Returns completion status and bytes remaining
@@ -62,7 +62,7 @@ Console.WriteLine("Completed: {0}", res.Completed);
 
 ## Security Notes
 
-This implementation uses low-level memory management and assembly code execution. It should only be used in trusted environments where code injection protections are appropriate for the use case.
+This implementation uses low-level memory management and x86_64 execution. It should only be used in trusted environments where code injection protections are appropriate for the use case.
 
 ## Dependencies
 
